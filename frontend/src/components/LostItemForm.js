@@ -77,10 +77,10 @@ const LostItemForm = () => {
                 const address = data.results[0].formatted_address;
                 setFormData({
                   ...formData,
-                  whereFound: address // Use the actual address here
+                  whereLost: address // Use the actual address here
                 });
               } else {
-                console.log("No results found");
+                console.log("No results Lost");
               }
             } else {
               console.log("Geocoder failed due to: " + data.status);
@@ -127,7 +127,7 @@ const LostItemForm = () => {
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="whereLost">
-              <Form.Label>Where found</Form.Label>
+              <Form.Label>Where Lost</Form.Label>
               <div className="d-flex align-items-center">
                 <div className="flex-grow-1">
                   <Form.Control
@@ -135,7 +135,7 @@ const LostItemForm = () => {
                     type="text"
                     name="whereLost"
                     placeholder="Where was the item Lost"
-                    value={formData.whereFound}
+                    value={formData.whereLost}
                     onChange={handleChange}
                   />
                 </div>
@@ -148,7 +148,7 @@ const LostItemForm = () => {
                 </Button>
               </div>
               <Form.Control.Feedback type="invalid">
-                Please provide where you found it.
+                Please provide where you Lost it.
               </Form.Control.Feedback>
             </Form.Group>
 
@@ -158,7 +158,7 @@ const LostItemForm = () => {
                 required
                 type="date"
                 name="date"
-                placeholder="The date the item was found"
+                placeholder="The date the item was Lost"
                 value={formData.date}
                 onChange={handleChange}
               />
