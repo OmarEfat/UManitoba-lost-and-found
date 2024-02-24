@@ -33,14 +33,37 @@ const FoundItemForm = () => {
   const handleUseCurrentLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
-        setFormData({
-          ...formData,
-          whereFound: `${position.coords.latitude}, ${position.coords.longitude}`
-        });
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+    
+        fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyD8MvdCoT8UpjOj1YmvFTEwsQtEi20Xtg0`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === "OK") {
+              if (data.results[0]) {
+                const address = data.results[0].formatted_address;
+                setFormData({
+                  ...formData,
+                  whereFound: address // Use the actual address here
+                });
+              } else {
+                console.log("No results found");
+              }
+            } else {
+              console.log("Geocoder failed due to: " + data.status);
+            }
+          });
+      }, (error) => {
+        console.warn(`ERROR(${error.code}): ${error.message}`);
+      }, {
+        maximumAge: 60000,
+        timeout: 5000,
+        enableHighAccuracy: true
       });
     } else {
       alert('Geolocation is not supported by this browser.');
     }
+    
   };
   return (
     <div>
