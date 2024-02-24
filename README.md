@@ -1,3 +1,10 @@
+# Important Note
+Please be aware that there is a known difficulty with running the database when connected to a VPN. The VPN is necessary to gain access to Google Gemi AI, which is restricted to Canada. While the individual parts of the application work fine independently, integrating them has shown that the VPN can cause issues with the localhost running. The AI script functions correctly by taking two parameters:
+
+Lost JSON Object
+List of Found JSON Objects
+It then returns the closest matching items and displays them to the user.
+
 # Welcome to .devHacks 2024!
 
 Welcome to .devHacks 2024, an exciting hackathon event where creativity and innovation collide! We're thrilled to have you join us for this incredible journey of hacking, learning, and collaboration.
