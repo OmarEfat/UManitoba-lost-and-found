@@ -24,9 +24,9 @@ const FoundItemsList = ({ items }) => {
                         {items.map((item, index) => (
                             <tr key={index}>
                                 <td>{item.title}</td>
-                                <td>{item.placeFound}</td>
-                                <td>{item.placeHanded}</td>
-                                <td>{item.date}</td>
+                                <td>{item.place_found}</td>
+                                <td>{item.place_handed}</td>
+                                <td>{item.date_found}</td>
                             </tr>
                         ))}
                     </tbody>
