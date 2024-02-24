@@ -22,6 +22,7 @@ const FoundItemForm = () => {
   };
 
   const handleSubmit = (event) => {
+    console.log('start')
     event.preventDefault();
     const form = event.currentTarget;
   
@@ -34,8 +35,9 @@ const FoundItemForm = () => {
   };
   
   const postData = async () => {
+    console.log("post found")
     try {
-      const response = await fetch('/add_found_item', {
+      const response = await fetch('http://127.0.0.1:5000/add_found_item', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -44,9 +46,9 @@ const FoundItemForm = () => {
           title: formData.title,
           placeFound: formData.placeFound,
           placeHanded: formData.placeHanded,
-          dateFound: formData.dateFound,
-          contactEmail: formData.contactEmail,
-          description: formData.itemDescription,
+          dateFound: "2024-02-02",
+          contactEmail: "a@gmail.com",//formData.contactEmail,
+          description: "new sdes",//formData.itemDescription,
         }),
       });
   
@@ -174,7 +176,7 @@ const FoundItemForm = () => {
               </Form.Control.Feedback>
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="date">
+            {/* <Form.Group className="mb-3" controlId="date">
               <Form.Label>Date</Form.Label>
               <Form.Control
                 required
@@ -187,7 +189,7 @@ const FoundItemForm = () => {
               <Form.Control.Feedback type="invalid">
                 Please provide a valid date.
               </Form.Control.Feedback>
-            </Form.Group>
+            </Form.Group> */}
             <Form.Group className="mb-3" controlId="email">
               <Form.Label>Email</Form.Label>
               <Form.Control
