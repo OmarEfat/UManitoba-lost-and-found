@@ -1,11 +1,14 @@
 import datetime
 from flask import Flask, jsonify, request 
+from flask_cors import CORS
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
 app = Flask(__name__)
+CORS(app) 
 app.app_context().push()
+
 app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql://root:''@127.0.0.1/lost_and_found_db'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 

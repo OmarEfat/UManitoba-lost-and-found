@@ -46,9 +46,9 @@ const FoundItemForm = () => {
           title: formData.title,
           placeFound: formData.placeFound,
           placeHanded: formData.placeHanded,
-          dateFound: "2024-02-02",
-          contactEmail: "a@gmail.com",//formData.contactEmail,
-          description: "new sdes",//formData.itemDescription,
+          dateFound: formData.date,
+          contactEmail: formData.email,
+          itemDescription: formData.description,
         }),
       });
   
@@ -176,7 +176,7 @@ const FoundItemForm = () => {
               </Form.Control.Feedback>
             </Form.Group>
 
-            {/* <Form.Group className="mb-3" controlId="date">
+            {<Form.Group className="mb-3" controlId="date">
               <Form.Label>Date</Form.Label>
               <Form.Control
                 required
@@ -189,7 +189,7 @@ const FoundItemForm = () => {
               <Form.Control.Feedback type="invalid">
                 Please provide a valid date.
               </Form.Control.Feedback>
-            </Form.Group> */}
+            </Form.Group> }
             <Form.Group className="mb-3" controlId="email">
               <Form.Label>Email</Form.Label>
               <Form.Control
