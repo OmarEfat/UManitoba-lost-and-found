@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Container, Col, Row, Form } from 'react-bootstrap';
 import {Typography} from '@mui/material';
 import NavBar from '../components/NavBar'; // Assuming NavBar is your header component
@@ -12,6 +12,9 @@ const LostItemForm = () => {
     contactEmail: '',
     itemDescription: ''
   });
+
+
+
 
   const [validated, setValidated] = useState(false);
 
