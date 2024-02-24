@@ -23,7 +23,7 @@ const HomePage = () => {
             <img
               className="d-block w-100"
               src={secondImage}
-              
+
               alt="First slide"
               style={{ objectFit: "cover", maxHeight: "450px", width: "100%" }}
             />
@@ -49,9 +49,9 @@ const HomePage = () => {
         </Carousel>
       </div>
 
-      
 
-      <Grid container spacing={1} style={{ textAlign: "center",marginTop: "50px"  }}>
+
+      <Grid container spacing={1} style={{ textAlign: "center", marginTop: "50px" }}>
         <Grid
           item
           xs={12}
@@ -60,13 +60,14 @@ const HomePage = () => {
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            paddingLeft:'3em'
+            paddingLeft: '3em'
           }}
         >
           <Typography variant="h3" style={{ marginBottom: "0.5em" }} sx={{ fontWeight: 'bold' }}>
             UManitoba Lost and Found
           </Typography>
-          <div style={{ marginBottom: "1em" }}>
+          <div style={{ marginBottom: "1em", paddingLeft: "5em" }}>
+
             <p>
               The chances of finding your lost items have never been higher.
               Powered by advanced AI technology, our website transforms the
@@ -111,6 +112,24 @@ const HomePage = () => {
             >
               I have found an item
             </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              component={Link}
+              to="/found-items" // Adjust this route as needed
+              sx={{
+                backgroundColor: "#D8824A",
+                margin: "8px",
+                padding: "10px 20px",
+                fontSize: '1rem',
+                textTransform: 'none',
+                '&:hover': {
+                  backgroundColor: "#cc6a36"
+                }
+              }}
+            >
+              Found Items
+            </Button>
           </div>
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -121,13 +140,11 @@ const HomePage = () => {
           />
         </Grid>
       </Grid>
-      
-      
       <footer style={{ backgroundColor: "#D8824A", padding: "10px", textAlign: "center" }}>
-  <p style={{ margin: "0" }}>
-    &copy; 2024 UofM. All rights reserved.
-  </p>
-</footer>
+        <p style={{ margin: "0" }}>
+          &copy; 2024 UofM. All rights reserved.
+        </p>
+      </footer>
     </div>
   );
 };

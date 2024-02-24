@@ -49,7 +49,7 @@ lost_items_schema=LostItemSchema(many=True)
 
 class FoundItemSchema(ma.Schema):
     class Meta:
-        fields= ('id', 'title', 'place_found', 'place_handed', 'email_lost', 'description')
+        fields= ('id', 'title', 'place_found', 'place_handed', 'email_lost', 'description' , 'date_found')
 
 found_item_schema=FoundItemSchema()
 found_items_schema=FoundItemSchema(many=True)
