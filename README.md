@@ -1,9 +1,9 @@
 # Important Note
-Please be aware that there is a known difficulty with running the database when connected to a VPN. The VPN is necessary to gain access to Google Gemi AI, which is restricted to Canada. While the individual parts of the application work fine independently, integrating them has shown that the VPN can cause issues with the localhost running. The AI script functions correctly by taking two parameters:
+Please be aware that there is a known difficulty with running the database when connected to a VPN. The VPN is necessary to gain access to Google Gemi AI, which is restricted to Canada. While the individual parts of the application work fine independently, integrating them has shown that the VPN will cause issues with the localhost running. The AI script functions correctly by taking two parameters:
 
-Lost JSON Object
-List of Found JSON Objects
-It then returns the closest matching items and displays them to the user.
+- A Lost item in a JSON format
+- List of Found Items in a JSON format
+It then returns the closest matching items in a JSON format and displays them to the user.
 
 # Welcome to .devHacks 2024!
 
