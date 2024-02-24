@@ -37,6 +37,16 @@ class LostItemSchema(ma.Schema):
 lost_item_schema=LostItemSchema()
 lost_items_schema=LostItemSchema(many=True)
 
+
+class FoundItemSchema(ma.Schema):
+    class Meta:
+        fields= ('id', 'title', 'place_found', 'place_handed', 'email_lost', 'description')
+
+found_item_schema=FoundItemSchema()
+found_items_schema=FoundItemSchema(many=True)
+
+
+
  
 class FoundItem(db.Model):
     
@@ -100,6 +110,29 @@ def add_lost_item():
         return None
 
 
+@app.route("/add_found_item", methods=['POST'])
+def add_found_item():
+    try:
+        title=request.json['title']
+        description=request.json['itemDescription']
+        email_found=request.json['contactEmail']
+        place_found=request.json['placeFound']
+        place_handed=request.json['placeHanded']
+        date_found=request.json['dateFound']
+        
+        found_item=FoundItem(title, place_found, email_found, place_handed, date_found, description)
+
+        db.session.add(found_item)
+        
+        db.session.commit()
+        
+        return  found_item_schema.jsonify(found_item)
+    except Exception as e:
+        print(e)
+        print("Something is worng when adding found item.")
+        return
+
+
 
 
 
@@ -110,10 +143,45 @@ def get_lost_items():
     return jsonify(results)
 
 
+
+@app.route('/get_found_items', methods=['GET'])
+def get_found_items():
+    all_found_items=FoundItem.query.all()
+    results=found_items_schema.dump(all_found_items)
+    return jsonify(results)
+
+
+
 @app.route('/get_lost_item/<id>/',methods=['GET'])
 def get_lost_item(id):
     lost_item=LostItem.query.get(id)
     return lost_item_schema.jsonify(lost_item)
+
+
+@app.route('/get_found_item/<id>/',methods=['GET'])
+def get_found_item(id):
+    found_item=FoundItem.query.get(id)
+    return found_item_schema.jsonify(found_item)
+
+
+
+@app.route('/delete_lost_item/<id>/',methods=['DELETE'])
+def delete_lost_item(id):
+    lost_item=LostItem.query.get(id)
+    
+    db.session.delete(lost_item)
+    db.session.commit()
+    return lost_item_schema.jsonify(lost_item)
+
+
+
+@app.route('/delete_found_item/<id>/',methods=['DELETE'])
+def delete_found_item(id):
+    found_item=FoundItem.query.get(id)
+    
+    db.session.delete(found_item)
+    db.session.commit()
+    return found_item_schema.jsonify(found_item)
 
 
 
