@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import FoundItemForm from './components/FoundItemForm';
 import LostItemForm from './components/LostItemForm';
-
+import "bootstrap/dist/css/bootstrap.css"
 const App = () => {
   return (
     <Router>
