@@ -4,7 +4,7 @@ import {Typography} from '@mui/material';
 import NavBar from '../components/NavBar'; // Assuming NavBar is your header component
 import lostImage from '../images/confused.jpg'; // Ensure this path is correct for your project
 
-const FoundItemForm = () => {
+const LostItemForm = () => {
   const [formData, setFormData] = useState({
     title: '',
     whereFound: '',
@@ -176,4 +176,4 @@ const FoundItemForm = () => {
   );
 };
 
-export default FoundItemForm;
+export default LostItemForm;
