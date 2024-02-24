@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Container, Col, Row, Form } from 'react-bootstrap';
 import {Typography} from '@mui/material';
-import NavBar from '../components/NavBar'; // Assuming NavBar is your header component
-import lostImage from '../images/confused.jpg'; // Ensure this path is correct for your project
+import NavBar from '../components/NavBar';
+import lostImage from '../images/confused.jpg';
 
 const LostItemForm = () => {
   const [formData, setFormData] = useState({
@@ -150,13 +150,13 @@ const LostItemForm = () => {
               <Form.Label>Description</Form.Label>
               
                 <Form.Control
-                  as="textarea" // Use textarea for multiline input
-                  rows={6} // Set the number of rows to make the textarea taller
+                  as="textarea" 
+                  rows={6} 
                   name="description"
                   placeholder="Detailed Item Description"
                   value={formData.description}
                   onChange={handleChange}
-                  style={{ resize: 'vertical' }} // Allow vertical resizing
+                  style={{ resize: 'vertical' }}
                 />
               <Form.Control.Feedback type="invalid">
                 Please provide a description.
