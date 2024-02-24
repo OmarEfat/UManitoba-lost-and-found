@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Button, Container, Col, Row, Form } from 'react-bootstrap';
 import {Typography} from '@mui/material';
-import NavBar from '../components/NavBar'; // Assuming NavBar is your header component
-import foundImage from '../images/found.JPG'; // Ensure this path is correct for your project
+import NavBar from '../components/NavBar'; 
+import foundImage from '../images/found.JPG';
 
 const FoundItemForm = () => {
   const [formData, setFormData] = useState({
     title: '',
-    whereFound: '',
+    placeFound: '',
+    placeHanded:'',
     dateFound: '',
     contactEmail: '',
     itemDescription: ''
@@ -23,14 +24,44 @@ const FoundItemForm = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const form = event.currentTarget;
+  
     if (form.checkValidity() === false) {
       event.stopPropagation();
     } else {
-      // Form submission logic here
+      setValidated(true);
+      postData();
     }
-    setValidated(true);
   };
-  const handleUseCurrentLocation = () => {
+  
+  const postData = async () => {
+    try {
+      const response = await fetch('/add_found_item', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: formData.title,
+          placeFound: formData.placeFound,
+          placeHanded: formData.placeHanded,
+          dateFound: formData.dateFound,
+          contactEmail: formData.contactEmail,
+          description: formData.itemDescription,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      console.log('Success:', data);
+    } catch (error) {
+      console.error('There was an error with the form submission:', error);
+    }
+  };
+  
+  const handleUseCurrentLocation = (fieldName) => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const lat = position.coords.latitude;
@@ -44,7 +75,7 @@ const FoundItemForm = () => {
                 const address = data.results[0].formatted_address;
                 setFormData({
                   ...formData,
-                  whereFound: address // Use the actual address here
+                  [fieldName]: address
                 });
               } else {
                 console.log("No results found");
@@ -92,23 +123,48 @@ const FoundItemForm = () => {
               </Form.Control.Feedback>
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="whereFound">
+            <Form.Group className="mb-3" controlId="placeFound">
               <Form.Label>Where found</Form.Label>
               <div className="d-flex align-items-center">
                 <div className="flex-grow-1">
                   <Form.Control
                     required
                     type="text"
-                    name="whereFound"
+                    name="placeFound"
                     placeholder="Where was the item found"
-                    value={formData.whereFound}
+                    value={formData.placeFound}
                     onChange={handleChange}
                   />
                 </div>
                 <Button 
                   variant="outline" 
                   style={{ marginLeft: "8px", backgroundColor: "#D8824A" }} 
-                  onClick={handleUseCurrentLocation}
+                  onClick={() => handleUseCurrentLocation('placeFound')}
+                >
+                  Use Current Location
+                </Button>
+              </div>
+              <Form.Control.Feedback type="invalid">
+                Please provide where you found it.
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="placeHanded">
+              <Form.Label>Where you handed the item to (optional)</Form.Label>
+              <div className="d-flex align-items-center">
+                <div className="flex-grow-1">
+                  <Form.Control
+                    type="text"
+                    name="placeHanded"
+                    placeholder="Where was the item handed to"
+                    value={formData.placeHanded}
+                    onChange={handleChange}
+                  />
+                </div>
+                <Button 
+                  variant="outline" 
+                  style={{ marginLeft: "8px", backgroundColor: "#D8824A" }} 
+                  onClick={() => handleUseCurrentLocation('placeHanded')}
                 >
                   Use Current Location
                 </Button>
@@ -150,13 +206,13 @@ const FoundItemForm = () => {
               <Form.Label>Description</Form.Label>
               
                 <Form.Control
-                  as="textarea" // Use textarea for multiline input
-                  rows={6} // Set the number of rows to make the textarea taller
+                  as="textarea"
+                  rows={6}
                   name="description"
                   placeholder="Detailed Item Description"
                   value={formData.description}
                   onChange={handleChange}
-                  style={{ resize: 'vertical' }} // Allow vertical resizing
+                  style={{ resize: 'vertical' }}
                 />
               <Form.Control.Feedback type="invalid">
                 Please provide a description.
