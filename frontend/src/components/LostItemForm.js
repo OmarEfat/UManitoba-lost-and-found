@@ -84,7 +84,7 @@ const FoundItemForm = () => {
                   />
                 </div>
                 <Button 
-                  variant="outline-secondary" 
+                  variant="outline" 
                   style={{ marginLeft: "8px", backgroundColor: "#D8824A" }} 
                   onClick={handleUseCurrentLocation}
                 >

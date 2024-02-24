@@ -1,9 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import myImage from "../images/helping.png";
-import secondImage from "../images/3235821.jpg";
+import secondImage from "../images/carousel1.png";
 import thirdImage from "../images/business09.jpg";
 import fourthImage from "../images/cardpic.png";
+
 //MUI
 import { Grid, Typography, Button } from "@mui/material";
 import { Carousel } from "react-bootstrap";
@@ -30,9 +31,9 @@ const HomePage = () => {
           <Carousel.Item>
             <img
               className="d-block w-100"
-              src={myImage}
+              src={fourthImage}
               alt="Second slide"
-              style={{ objectFit: "cover", maxHeight: "450px", width: "100%" }}
+              style={{ objectFit: "object-fit-cover", maxHeight: "450px", width: "100%" }}
             />
           </Carousel.Item>
 
@@ -58,7 +59,7 @@ const HomePage = () => {
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            paddingLeft:'1em'
+            paddingLeft:'3em'
           }}
         >
           <Typography variant="h3" style={{ marginBottom: "0.5em" }} sx={{ fontWeight: 'bold' }}>

@@ -84,7 +84,7 @@ const FoundItemForm = () => {
                   />
                 </div>
                 <Button 
-                  variant="outline-secondary" 
+                  variant="outline" 
                   style={{ marginLeft: "8px", backgroundColor: "#D8824A" }} 
                   onClick={handleUseCurrentLocation}
                 >
@@ -113,6 +113,7 @@ const FoundItemForm = () => {
             <Form.Group className="mb-3" controlId="email">
               <Form.Label>Email</Form.Label>
               <Form.Control
+                required
                 type="email"
                 name="email"
                 placeholder="Contact Email (Optional)"
