@@ -66,7 +66,8 @@ const HomePage = () => {
           <Typography variant="h3" style={{ marginBottom: "0.5em" }} sx={{ fontWeight: 'bold' }}>
             UManitoba Lost and Found
           </Typography>
-          <div style={{ marginBottom: "1em" }}>
+          <div style={{ marginBottom: "1em", paddingLeft: "5em" }}>
+
             <p>
               The chances of finding your lost items have never been higher.
               Powered by advanced AI technology, our website transforms the
