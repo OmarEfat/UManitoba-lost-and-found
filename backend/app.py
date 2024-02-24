@@ -93,10 +93,10 @@ def get_lost_item_draft():
 def add_lost_item():
     try:
         title=request.json['title']
-        description=request.json['description']
-        email_lost=request.json['email_lost']
-        place_lost=request.json['place_lost']
-        date_lost=request.json['date_lost']
+        description=request.json['itemDescription']
+        email_lost=request.json['contactEmail']
+        place_lost=request.json['placeLost']
+        date_lost=request.json['dateLost']
 
         
         
