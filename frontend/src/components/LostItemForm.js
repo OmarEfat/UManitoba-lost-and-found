@@ -35,7 +35,7 @@ const LostItemForm = () => {
       navigator.geolocation.getCurrentPosition((position) => {
         setFormData({
           ...formData,
-          whereFound: `${position.coords.latitude}, ${position.coords.longitude}`
+          whereLost: `${position.coords.latitude}, ${position.coords.longitude}`
         });
       });
     } else {
@@ -71,7 +71,7 @@ const LostItemForm = () => {
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="whereLost">
-              <Form.Label>Where found</Form.Label>
+              <Form.Label>Where Lost</Form.Label>
               <div className="d-flex align-items-center">
                 <div className="flex-grow-1">
                   <Form.Control
@@ -79,7 +79,7 @@ const LostItemForm = () => {
                     type="text"
                     name="whereLost"
                     placeholder="Where was the item Lost"
-                    value={formData.whereFound}
+                    value={formData.whereLost}
                     onChange={handleChange}
                   />
                 </div>
@@ -92,7 +92,7 @@ const LostItemForm = () => {
                 </Button>
               </div>
               <Form.Control.Feedback type="invalid">
-                Please provide where you found it.
+                Please provide where you Lost it.
               </Form.Control.Feedback>
             </Form.Group>
 
@@ -102,7 +102,7 @@ const LostItemForm = () => {
                 required
                 type="date"
                 name="date"
-                placeholder="The date the item was found"
+                placeholder="The date the item was Lost"
                 value={formData.date}
                 onChange={handleChange}
               />

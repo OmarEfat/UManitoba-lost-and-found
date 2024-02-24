@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import myImage from "../images/helping.png";
 import secondImage from "../images/carousel1.png";
-import thirdImage from "../images/business09.jpg";
+import thirdImage from "../images/business09.png";
 import fourthImage from "../images/cardpic.png";
 
 //MUI
@@ -31,7 +31,7 @@ const HomePage = () => {
           <Carousel.Item>
             <img
               className="d-block w-100"
-              src={fourthImage}
+              src={thirdImage}
               alt="Second slide"
               style={{ objectFit: "object-fit-cover", maxHeight: "450px", width: "100%" }}
             />
@@ -40,7 +40,8 @@ const HomePage = () => {
           <Carousel.Item>
             <img
               className="d-block w-100"
-              src={thirdImage}
+              
+              src={secondImage}
               alt="Third slide"
                style={{ objectFit: "cover", maxHeight: "450px", width: "100%" }}
             />

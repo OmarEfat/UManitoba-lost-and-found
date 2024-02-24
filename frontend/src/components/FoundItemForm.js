@@ -52,7 +52,7 @@ const FoundItemForm = () => {
               I have found an item
             </Typography>
             <Typography variant="body1" gutterBottom>
-            Disclaimer: Our website utilizes Artificial Intelligence (AI) to optimize the pairing of items. The accuracy and efficacy of the matching process are greatly influenced by the quantity and specificity of the information you provide. You will receive email notifications regarding any updates related to your lost item.
+            Disclaimer: Our website utilizes Artificial Intelligence (AI) to optimize the pairing of items. The accuracy and efficacy of the matching process are greatly influenced by the quantity and specificity of the information you provide. You will receive email notifications regarding any updates.
             </Typography>   
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="title">
