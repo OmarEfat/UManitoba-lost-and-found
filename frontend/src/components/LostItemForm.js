@@ -7,7 +7,7 @@ import lostImage from '../images/confused.jpg';
 const LostItemForm = () => {
   const [formData, setFormData] = useState({
     title: '',
-    whereFound: '',
+    placeLost: '',
     dateFound: '',
     contactEmail: '',
     itemDescription: ''
@@ -22,16 +22,46 @@ const LostItemForm = () => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
-
+  
   const handleSubmit = (event) => {
     event.preventDefault();
     const form = event.currentTarget;
-    if (form.checkValidity() === false) {
+  
+    if (!form.checkValidity()) {
       event.stopPropagation();
     } else {
-      // Form submission logic here
+      postData(); // Post data if the form is valid
     }
-    setValidated(true);
+    setValidated(true); // Set the form as validated for Bootstrap's validation styles to take effect
+  };
+  
+  const postData = async () => {
+    console.log("Posting lost item data");
+    try {
+      const response = await fetch('http://127.0.0.1:5000/add_lost_item', { // Make sure this matches your Flask endpoint for lost items
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: formData.title,
+          placeLost: formData.whereLost, // Make sure this key matches what your backend expects
+          dateLost: formData.date, // Make sure this key matches what your backend expects
+          contactEmail: formData.email,
+          itemDescription: formData.description,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      console.log('Success:', data);
+      // Reset the form or navigate the user to a success page, etc.
+    } catch (error) {
+      console.error('There was an error with the form submission:', error);
+    }
   };
   const handleUseCurrentLocation = () => {
     if (navigator.geolocation) {
