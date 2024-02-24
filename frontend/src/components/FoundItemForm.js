@@ -56,9 +56,9 @@ const FoundItemForm = () => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-  
       const data = await response.json();
       console.log('Success:', data);
+      alert("Item added, thanks")
     } catch (error) {
       console.error('There was an error with the form submission:', error);
     }

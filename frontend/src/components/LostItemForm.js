@@ -58,6 +58,7 @@ const LostItemForm = () => {
   
       const data = await response.json();
       console.log('Success:', data);
+      alert("Item added, thanks");
       // Reset the form or navigate the user to a success page, etc.
     } catch (error) {
       console.error('There was an error with the form submission:', error);
