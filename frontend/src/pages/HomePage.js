@@ -14,7 +14,7 @@ const HomePage = () => {
         <NavBar />
       </div>
 
-      <Grid container spacing={2} style={{ textAlign: "center" }}>
+      <Grid container spacing={1} style={{ textAlign: "center" }}>
         <Grid
           item
           xs={12}
@@ -43,7 +43,16 @@ const HomePage = () => {
               color="primary"
               component={Link}
               to="/lost-item"
-              style={{ backgroundColor: "#D8824A", margin: "8px" }}
+              sx={{
+                backgroundColor: "#D8824A",
+                margin: "8px",
+                padding: "10px 20px",
+                fontSize: '1rem',
+                textTransform: 'none',
+                '&:hover': {
+                  backgroundColor: "#cc6a36"
+                }
+              }}
             >
               I have lost an item
             </Button>
@@ -52,7 +61,16 @@ const HomePage = () => {
               color="primary"
               component={Link}
               to="/found-item"
-              style={{ backgroundColor: "#D8824A", margin: "8px" }}
+              sx={{
+                backgroundColor: "#D8824A",
+                margin: "8px",
+                padding: "10px 20px",
+                fontSize: '1rem',
+                textTransform: 'none',
+                '&:hover': {
+                  backgroundColor: "#cc6a36"
+                }
+              }}
             >
               I have found an item
             </Button>
