@@ -1,20 +1,55 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import myImage from "../images/helping.png";
-
+import secondImage from "../images/3235821.jpg";
+import thirdImage from "../images/business09.jpg";
+import fourthImage from "../images/cardpic.png";
 //MUI
 import { Grid, Typography, Button } from "@mui/material";
-
+import { Carousel } from "react-bootstrap";
 import NavBar from "../components/NavBar";
 
 const HomePage = () => {
   return (
     <div className="home">
-      <div style={{ marginBottom: "100px" }}>
+      <div style={{ marginBottom: "10px" }}>
         <NavBar />
       </div>
 
-      <Grid container spacing={1} style={{ textAlign: "center" }}>
+      <div className="d-flex ">
+        <Carousel style={{ width: "100%", display: "flex" }}>
+          <Carousel.Item>
+            <img
+              className="d-block w-100"
+              src={secondImage}
+              
+              alt="First slide"
+              style={{ objectFit: "cover", maxHeight: "450px", width: "100%" }}
+            />
+          </Carousel.Item>
+          <Carousel.Item>
+            <img
+              className="d-block w-100"
+              src={myImage}
+              alt="Second slide"
+              style={{ objectFit: "cover", maxHeight: "450px", width: "100%" }}
+            />
+          </Carousel.Item>
+
+          <Carousel.Item>
+            <img
+              className="d-block w-100"
+              src={thirdImage}
+              alt="Third slide"
+               style={{ objectFit: "cover", maxHeight: "450px", width: "100%" }}
+            />
+          </Carousel.Item>
+        </Carousel>
+      </div>
+
+      
+
+      <Grid container spacing={1} style={{ textAlign: "center",marginTop: "50px"  }}>
         <Grid
           item
           xs={12}
@@ -27,7 +62,7 @@ const HomePage = () => {
           }}
         >
           <Typography variant="h3" style={{ marginBottom: "0.5em" }} sx={{ fontWeight: 'bold' }}>
-            UManitoba Found and Lost
+            UManitoba Lost and Found
           </Typography>
           <div style={{ marginBottom: "1em" }}>
             <p>
@@ -80,10 +115,17 @@ const HomePage = () => {
           <img
             src={myImage}
             alt="lost and found picture"
-            style={{ width: "70%", height: "auto" }}
+            style={{ width: "50%", height: "auto" }}
           />
         </Grid>
       </Grid>
+      
+      
+      <footer style={{ backgroundColor: "#D8824A", padding: "10px", textAlign: "center" }}>
+  <p style={{ margin: "0" }}>
+    &copy; 2024 UofM. All rights reserved.
+  </p>
+</footer>
     </div>
   );
 };

@@ -6,10 +6,10 @@ import logo from "../images/logo.png";
 
 function NavBar() {
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#00A3E0' }}>
+    <AppBar position="static" sx={{ backgroundColor: '#D8824A' }}>
       <Toolbar>
       <Link to="/" style={{ flexGrow: 1 }}>
-          <img src={logo} alt="Logo" style={{ height: '50px' }} />
+          <img src={logo} alt="Logo" style={{ height: '70px' }} />
         </Link>
         <Button color="inherit" component={Link} to="/lost-item">Lost Item</Button>
         <Button color="inherit" component={Link} to="/found-item">Found Item</Button>
