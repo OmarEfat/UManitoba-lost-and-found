@@ -52,3 +52,5 @@ Happy hacking, and best of luck to all participants! Let's make .devHacks 2024 a
 # Start the web:
 
 npm install react-scripts --save
+cd frontend
+npm startapp
