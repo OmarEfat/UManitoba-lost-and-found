@@ -7,7 +7,8 @@ import foundImage from '../images/found.JPG';
 const FoundItemForm = () => {
   const [formData, setFormData] = useState({
     title: '',
-    whereFound: '',
+    placeFound: '',
+    placeHanded:'',
     dateFound: '',
     contactEmail: '',
     itemDescription: ''
@@ -41,7 +42,8 @@ const FoundItemForm = () => {
         },
         body: JSON.stringify({
           title: formData.title,
-          whereFound: formData.whereFound,
+          placeFound: formData.placeFound,
+          placeHanded: formData.placeHanded,
           dateFound: formData.dateFound,
           contactEmail: formData.contactEmail,
           description: formData.itemDescription,
@@ -59,7 +61,7 @@ const FoundItemForm = () => {
     }
   };
   
-  const handleUseCurrentLocation = () => {
+  const handleUseCurrentLocation = (fieldName) => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const lat = position.coords.latitude;
@@ -73,7 +75,7 @@ const FoundItemForm = () => {
                 const address = data.results[0].formatted_address;
                 setFormData({
                   ...formData,
-                  whereFound: address // Use the actual address here
+                  [fieldName]: address
                 });
               } else {
                 console.log("No results found");
@@ -121,23 +123,48 @@ const FoundItemForm = () => {
               </Form.Control.Feedback>
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="whereFound">
+            <Form.Group className="mb-3" controlId="placeFound">
               <Form.Label>Where found</Form.Label>
               <div className="d-flex align-items-center">
                 <div className="flex-grow-1">
                   <Form.Control
                     required
                     type="text"
-                    name="whereFound"
+                    name="placeFound"
                     placeholder="Where was the item found"
-                    value={formData.whereFound}
+                    value={formData.placeFound}
                     onChange={handleChange}
                   />
                 </div>
                 <Button 
                   variant="outline" 
                   style={{ marginLeft: "8px", backgroundColor: "#D8824A" }} 
-                  onClick={handleUseCurrentLocation}
+                  onClick={() => handleUseCurrentLocation('placeFound')}
+                >
+                  Use Current Location
+                </Button>
+              </div>
+              <Form.Control.Feedback type="invalid">
+                Please provide where you found it.
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="placeHanded">
+              <Form.Label>Where you handed the item to (optional)</Form.Label>
+              <div className="d-flex align-items-center">
+                <div className="flex-grow-1">
+                  <Form.Control
+                    type="text"
+                    name="placeHanded"
+                    placeholder="Where was the item handed to"
+                    value={formData.placeHanded}
+                    onChange={handleChange}
+                  />
+                </div>
+                <Button 
+                  variant="outline" 
+                  style={{ marginLeft: "8px", backgroundColor: "#D8824A" }} 
+                  onClick={() => handleUseCurrentLocation('placeHanded')}
                 >
                   Use Current Location
                 </Button>
