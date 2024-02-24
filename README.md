@@ -46,3 +46,11 @@ Our volunteers who have made .devHacks 2024 possible.
 Thank you for your support!
 
 Happy hacking, and best of luck to all participants! Let's make .devHacks 2024 an unforgettable experience!
+
+
+
+# Start the web:
+
+npm install react-scripts --save
+cd frontend
+npm startapp

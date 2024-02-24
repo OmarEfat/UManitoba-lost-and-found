@@ -1,0 +1,8 @@
+Flask
+--upgrade pip
+npm install axios
+
+Flask-SQLAlchemy
+myslqclient (might need to insatll this before: brew install mysql-client ) 
+flask-marshmallow
+marshmallow-sqlalchemy
