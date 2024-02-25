@@ -282,8 +282,8 @@ def process_json_objects():
     all_found_items=FoundItem.query.all()
     list_found_json=found_items_schema.dump(all_found_items)
     #list_found_json=    jsonify(results)
-    print("List found items\n")
-    print(list_found_json)
+   # print("List found items\n")
+    #print(list_found_json)
 
 
     all_lost_items=LostItem.query.all()
@@ -293,22 +293,23 @@ def process_json_objects():
 
     json_object_list = []
 
-    for found_item in list_found_json.items():
+    for found_item in list_found_json:
             
-        lost_description = found_item["itemDescription"]
+        lost_description = found_item["description"]
         lost_title=found_item["title"]
         combined_main = f"{lost_title} {lost_description}"
 
 
         if combined_main is not None:
-            for idx, json_obj in enumerate(list_lost_json, start=1):
-                title = list_found_json["title"]
+            #for idx, json_obj in enumerate(list_lost_json, start=1):
+            for json_obj in list_lost_json:
+                title = json_obj["title"] 
 
-                description = list_found_json["itemDescription"]
+                description = json_obj["description"]
                 combined_obj = f"{title} {description}"
                 if combined_obj is not None:
                     if isMatch(combined_main, combined_obj):
-                        json_obj["placeHanded"]=found_item["placeHanded"]
+                        json_obj["place_handed"]=found_item["place_handed"]
                         json_object_list.append(json_obj)
     return json_object_list
 
