@@ -112,6 +112,12 @@ def add_lost_item():
         
         db.session.commit()
         
+        print("Runing match in add lost")
+
+
+        matching_lost_items=process_json_objects()
+        print("Matching ", matching_lost_items)
+
         return    lost_item_schema.jsonify(lost_item)
     except Exception as e:
         print(e)
@@ -134,6 +140,10 @@ def add_found_item():
         db.session.add(found_item)
         
         db.session.commit()
+
+
+        print("Runing match in add found")
+       
 
         matching_lost_items=process_json_objects()
         print("Matching ", matching_lost_items)
@@ -270,35 +280,35 @@ test_cases = [
 
 def process_json_objects():
     all_found_items=FoundItem.query.all()
-    results=found_items_schema.dump(all_found_items)
-    list_found_json=    jsonify(results)
+    list_found_json=found_items_schema.dump(all_found_items)
+    #list_found_json=    jsonify(results)
     print("List found items\n")
     print(list_found_json)
 
 
     all_lost_items=LostItem.query.all()
-    results=lost_items_schema.dump(all_lost_items)
-    list_lost_json=jsonify(results)
+    list_lost_json=lost_items_schema.dump(all_lost_items)
+    #list_lost_json=jsonify(results)
 
 
     json_object_list = []
 
-    for found_item in list_found_json:
+    for found_item in list_found_json.items():
             
-        lost_description = found_item.get("itemDescription")
-        lost_title=found_item.get("title")
+        lost_description = found_item["itemDescription"]
+        lost_title=found_item["title"]
         combined_main = f"{lost_title} {lost_description}"
 
 
         if combined_main is not None:
             for idx, json_obj in enumerate(list_lost_json, start=1):
-                title = list_found_json.get("title")
+                title = list_found_json["title"]
 
-                description = list_found_json.get("itemDescription")
+                description = list_found_json["itemDescription"]
                 combined_obj = f"{title} {description}"
                 if combined_obj is not None:
                     if isMatch(combined_main, combined_obj):
-                        json_obj["placeHanded"]=found_item.get("placeHanded")
+                        json_obj["placeHanded"]=found_item["placeHanded"]
                         json_object_list.append(json_obj)
     return json_object_list
 
