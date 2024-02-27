@@ -1,9 +1,19 @@
+## All libraries are already found in Python - no need to install any
+
 from email.message import EmailMessage
 import ssl ## Extra layer of security 
 import smtplib
+import os
+from dotenv import load_dotenv
 
-EMAIL_SENDER = "umanitobafoundandlost@gmail.com"
-EMAIL_PASSWORD = 'yqsn qcnm taxj apzu' ## We need to find a way to hide this password 
+# Load the environment variables from .env file
+load_dotenv()
+
+# Use the environment variables
+EMAIL_SENDER = os.getenv('EMAIL_SENDER')
+EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
+
+
 
 def send_html_email(email_receiver, subject, body):
     email = EmailMessage()
