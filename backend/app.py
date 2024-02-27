@@ -152,7 +152,7 @@ def add_found_item():
     except Exception as e:
         print(e)
         print("Something is worng when adding found item.")
-        return
+        return None
 
 
 
@@ -282,8 +282,8 @@ def process_json_objects():
     all_found_items=FoundItem.query.all()
     list_found_json=found_items_schema.dump(all_found_items)
     #list_found_json=    jsonify(results)
-   # print("List found items\n")
-    #print(list_found_json)
+    print("List found items\n")
+    print(list_found_json)
 
 
     all_lost_items=LostItem.query.all()
