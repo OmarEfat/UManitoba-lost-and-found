@@ -1,4 +1,4 @@
-import datetime
+import datetime, json
 import google.generativeai as genai
 
 
@@ -98,31 +98,26 @@ def get_lost_item_draft():
 @app.route("/add_lost_item", methods=['POST'])
 def add_lost_item():
     try:
-        title=request.json['title']
-        description=request.json['itemDescription']
-        email_lost=request.json['contactEmail']
-        place_lost=request.json['placeLost']
-        date_lost=request.json['dateLost']
+        title = request.json['title']
+        description = request.json['itemDescription']
+        email_lost = request.json['contactEmail']
+        place_lost = request.json['placeLost']
+        date_lost = request.json['dateLost']
 
-        
-        
-        lost_item=LostItem(title, place_lost, email_lost,date_lost, description)
-
+        lost_item = LostItem(title, place_lost, email_lost, date_lost, description)
         db.session.add(lost_item)
-        
         db.session.commit()
+
+        # Call process_json_objects() with title and description arguments
+        matching_found_items = process_json_objects(title, description)
+        print("Matching ", matching_found_items)
         
-        print("Runing match in add lost")
-
-
-        matching_lost_items=process_json_objects()
-        print("Matching ", matching_lost_items)
-
-        return    lost_item_schema.jsonify(lost_item)
+        return lost_item_schema.jsonify(lost_item)
     except Exception as e:
         print(e)
-        print("Something is worng when adding lost item.")
-        return None
+        print("Something is wrong when adding a lost item.")
+        return jsonify({"error": "An error occurred while adding a lost item."}), 500
+
 
 
 @app.route("/add_found_item", methods=['POST'])
@@ -142,11 +137,6 @@ def add_found_item():
         db.session.commit()
 
 
-        print("Runing match in add found")
-       
-
-        matching_lost_items=process_json_objects()
-        print("Matching ", matching_lost_items)
         
         return  found_item_schema.jsonify(found_item)
     except Exception as e:
@@ -217,6 +207,7 @@ def isMatch(lost, found):
     percent = evaluate_item_match(lost, found)
     if percent >= 65:
         result = True
+
     return result
 
 
@@ -278,40 +269,27 @@ test_cases = [
 
 
 
-def process_json_objects():
-    all_found_items=FoundItem.query.all()
-    list_found_json=found_items_schema.dump(all_found_items)
-    #list_found_json=    jsonify(results)
-    print("List found items\n")
-    print(list_found_json)
-
-
-    all_lost_items=LostItem.query.all()
-    list_lost_json=lost_items_schema.dump(all_lost_items)
-    #list_lost_json=jsonify(results)
-
+def process_json_objects(title, description):
+    all_found_items = FoundItem.query.all()
+    list_found_json = found_items_schema.dump(all_found_items)
 
     json_object_list = []
 
     for found_item in list_found_json:
-            
-        lost_description = found_item["description"]
-        lost_title=found_item["title"]
-        combined_main = f"{lost_title} {lost_description}"
-
+        found_description = found_item["description"]
+        found_title = found_item["title"]
+        combined_main = f"{found_title} {found_description}"
 
         if combined_main is not None:
-            #for idx, json_obj in enumerate(list_lost_json, start=1):
-            for json_obj in list_lost_json:
-                title = json_obj["title"] 
+            combined_user_input = f"{title} {description}"
+            if isMatch(combined_user_input, combined_main):
+                found_item["place_handed"] = found_item["place_handed"]
+                json_object_list.append(found_item)
+    with open('redirectedPage.js', 'w') as json_file:
+        json.dump(json_object_list, json_file)
 
-                description = json_obj["description"]
-                combined_obj = f"{title} {description}"
-                if combined_obj is not None:
-                    if isMatch(combined_main, combined_obj):
-                        json_obj["place_handed"]=found_item["place_handed"]
-                        json_object_list.append(json_obj)
     return json_object_list
+
 
     
 
