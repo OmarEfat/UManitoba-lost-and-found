@@ -5,7 +5,7 @@ import FoundItemForm from './components/FoundItemForm';
 import LostItemForm from './components/LostItemForm';
 import "bootstrap/dist/css/bootstrap.css"
 import FoundItemsList from './components/FoundItemsList';
-
+import MatchesPage from './components/redirectedPage.js';
 
 const App = () => {
 
@@ -36,6 +36,7 @@ const App = () => {
         <Route path="/found-item" element={<FoundItemForm />} />
         <Route path="/lost-item" element={<LostItemForm />} />
         <Route path="/found-items" element={<FoundItemsList items={foundItems} />} />
+        <Route path="/redirected-page" element={<MatchesPage />} />
         {/* Add additional routes here */}
       </Routes>
     </Router>
