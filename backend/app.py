@@ -1,10 +1,16 @@
-import datetime
+import datetime, json
+import google.generativeai as genai
+
+
 from flask import Flask, jsonify, request 
 from flask_cors import CORS
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
+
+GOOGLE_API_KEY='AIzaSyAlCfjFEtoWVZ6ITvU0EtgW26twPI-596c'
+ 
 app = Flask(__name__)
 CORS(app) 
 app.app_context().push()
@@ -92,25 +98,26 @@ def get_lost_item_draft():
 @app.route("/add_lost_item", methods=['POST'])
 def add_lost_item():
     try:
-        title=request.json['title']
-        description=request.json['itemDescription']
-        email_lost=request.json['contactEmail']
-        place_lost=request.json['placeLost']
-        date_lost=request.json['dateLost']
+        title = request.json['title']
+        description = request.json['itemDescription']
+        email_lost = request.json['contactEmail']
+        place_lost = request.json['placeLost']
+        date_lost = request.json['dateLost']
 
-        
-        
-        lost_item=LostItem(title, place_lost, email_lost,date_lost, description)
-
+        lost_item = LostItem(title, place_lost, email_lost, date_lost, description)
         db.session.add(lost_item)
-        
         db.session.commit()
+
+        # Call process_json_objects() with title and description arguments
+        matching_found_items = process_json_objects(title, description)
+        print("Matching ", matching_found_items)
         
-        return    lost_item_schema.jsonify(lost_item)
+        return lost_item_schema.jsonify(lost_item)
     except Exception as e:
         print(e)
-        print("Something is worng when adding lost item.")
-        return None
+        print("Something is wrong when adding a lost item.")
+        return jsonify({"error": "An error occurred while adding a lost item."}), 500
+
 
 
 @app.route("/add_found_item", methods=['POST'])
@@ -128,12 +135,14 @@ def add_found_item():
         db.session.add(found_item)
         
         db.session.commit()
+
+
         
         return  found_item_schema.jsonify(found_item)
     except Exception as e:
         print(e)
         print("Something is worng when adding found item.")
-        return
+        return None
 
 
 
@@ -185,6 +194,144 @@ def delete_found_item(id):
     db.session.delete(found_item)
     db.session.commit()
     return found_item_schema.jsonify(found_item)
+
+
+
+
+
+
+genai.configure(api_key=GOOGLE_API_KEY)
+
+def isMatch(lost, found):
+    result = False
+    percent = evaluate_item_match(lost, found)
+    if percent >= 50:
+        result = True
+
+    return result
+
+
+
+def evaluate_item_match(lost, found):
+    model = genai.GenerativeModel('gemini-pro')
+    
+    prompt = f"Given a lost item described as '{lost}' and a found item described as '{found}', " \
+             f"evaluate the probability (as a percentage) that these items are a match. " \
+             f"Consider that humans may not write accurate descriptions."\
+             f"Check if the description describes the same object. If the objects are similar, consider checking the color and other details to evaluate their match. Color match is essential."\
+             f"if you recieved an input garbage text or any empty text just return a 0"\
+             f"Provide only the numerical probability."
+    
+    response = model.generate_content(prompt)
+    
+    probability_value = 1
+    try:
+        probability = response.text.strip().replace('%', '')
+        probability_value = max(float(probability), 1)  
+        
+        print("This is the matching percentage: ", probability_value)
+        print(" ")
+    except (ValueError, AttributeError):
+        pass
+    
+    return probability_value
+
+# test_cases = [
+#     ("black leather wallet", "found black wallet, seems to be leather"),
+#     ("set of keys", "bunch of keys found with a red keychain"),
+#     ("Samsung Galaxy S10 phone in a blue case", "blue smartphone found, looks like an Android"),
+#     ("Ray-Ban sunglasses", "found sunglasses, brand is Ray-Ban"),
+#     ("silver necklace", "found a necklace, appears to be gold"),
+#     ("white Adidas sneakers size 10", "black Nike sneakers found, size 9"),
+#     ("laptop charger", "USB-C laptop charger found"),
+#     ("Harry Potter book", "found a book, cover says Lord of the Rings"),
+#     ("water bottle, blue, 1 liter", "small green water bottle found"),
+#     ("", ""),  # Empty descriptions
+#     ("black watch with a leather strap", "A watch with a black strap and metal band"),  # Similar but not exact match
+#     ("red scarf", "found a piece of red fabric, could be a scarf or a bandana")  # Vague description
+# ]
+
+
+
+
+
+test_cases = [
+
+   ("black phone ", " i found a phone while walking down the street across from engineering building, i think it was some type of bright color"),
+   ("smart watch ", "smart phone"),
+   ("android phone ", "ios phone "),
+   ("balck hoodi", "black shirt"),
+]
+
+
+# for lost, found in test_cases:
+#     print(f"Lost: '{lost}', Found: '{found}'")
+#     match_probability = evaluate_item_match(lost, found)
+#     print(f"Match Probability: {match_probability}%\n")
+
+
+
+
+def process_json_objects(title, description):
+    all_found_items = FoundItem.query.all()
+    list_found_json = found_items_schema.dump(all_found_items)
+
+    json_object_list = []
+
+    for found_item in list_found_json:
+        found_description = found_item["description"]
+        found_title = found_item["title"]
+        combined_main = f"{found_title} {found_description}"
+
+        if combined_main is not None:
+            combined_user_input = f"{title} {description}"
+            if isMatch(combined_user_input, combined_main):
+                found_item["place_handed"] = found_item["place_handed"]
+                json_object_list.append(found_item)
+    with open('redirectedPage.js', 'w') as json_file:
+        json.dump(json_object_list, json_file)
+
+    return json_object_list
+
+
+    
+
+# main_json = {
+
+#     "title": "iphone",
+#     "description": "black phone"
+# }
+
+# Define a list of JSON objects
+# json_list = [
+#     {
+#         "title": "tv",
+#         "description": "black tv"
+#     },
+#     {
+#         "title": "phone",
+#         "description": "dark colored phone"
+#     },
+#     {
+#         "title": "smart phone",
+#         "description": "dark colored phone"
+#     },
+#     {
+#         "title": "phone",
+#         "description": "dark colored smart phone"
+#     },
+#     {
+#         "title": "phone",
+#         "description": "android phone"
+#     },
+#     {
+#         "title": "phone",
+#         "description": "blue colored iphone"
+#     }
+
+# ]
+
+
 
 
 
