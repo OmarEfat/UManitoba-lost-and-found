@@ -6,6 +6,12 @@ import lostImage from '../images/confused.jpg';
 import ReCAPTCHA from "react-google-recaptcha";
 
 
+const MAX_EMAIL=100;
+const MAX_TITLE=100;
+const MAX_DESCRIPTION=1000;
+const MAX_PLACE_LOST =1000;
+const MAX_DATE=12;
+
 
 const LostItemForm = () => {
   const [formData, setFormData] = useState({
@@ -21,6 +27,14 @@ const LostItemForm = () => {
 
   const [validated, setValidated] = useState(false);
   const [recaptchaVerified, setRecaptchaVerified] = useState(false);
+  const [maxReached, setMaxReached] = useState({
+    title: false,
+    placeLost: false,
+    date: false,
+    email: false,
+    description: false
+  });
+
 
   useEffect(() => {
     window.recaptchaCallback = () => setRecaptchaVerified(true);
@@ -29,7 +43,37 @@ const LostItemForm = () => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
+
+
+    // Define maximum lengths for each field
+    const maxLengths = {
+      title: MAX_TITLE,
+      placeLost: MAX_PLACE_LOST,
+      date: MAX_DATE,
+      email: MAX_EMAIL, // Adjust as needed
+      description: MAX_DESCRIPTION // Adjust as needed
+    };
+
+    event.target.maxLength = maxLengths[name];
+
+
+    // Update the form data with the truncated value
+    setFormData({
+      ...formData,
+      [name]: value//truncatedValue
+    });
+
+    if (value.length >= maxLengths[name]) {
+      setMaxReached({
+        ...maxReached,
+        [name]: true
+      });
+    } else {
+      setMaxReached({
+        ...maxReached,
+        [name]: false
+      });
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -60,7 +104,7 @@ const LostItemForm = () => {
         },
         body: JSON.stringify({
           title: formData.title,
-          placeLost: formData.whereLost, // Make sure this key matches what your backend expects
+          placeLost: formData.placeLost, // Make sure this key matches what your backend expects
           dateLost: formData.date, // Make sure this key matches what your backend expects
           contactEmail: formData.email,
           itemDescription: formData.description,
@@ -93,7 +137,7 @@ const LostItemForm = () => {
                 const address = data.results[0].formatted_address;
                 setFormData({
                   ...formData,
-                  whereLost: address // Use the actual address here
+                  placeLost: address // Use the actual address here
                 });
               } else {
                 console.log("No results Lost");
@@ -128,7 +172,7 @@ const LostItemForm = () => {
             </Typography>
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-3" controlId="title">
-                <Form.Label>Title</Form.Label>
+                <Form.Label>Title (required, {MAX_TITLE} characters max)</Form.Label>
                 <Form.Control
                   required
                   type="text"
@@ -137,21 +181,22 @@ const LostItemForm = () => {
                   value={formData.title}
                   onChange={handleChange}
                 />
+                {maxReached.title && <small className="text-danger">Maximum {MAX_TITLE} characters reached</small>}
                 <Form.Control.Feedback type="invalid">
                   Please provide a title.
                 </Form.Control.Feedback>
               </Form.Group>
 
-              <Form.Group className="mb-3" controlId="whereLost">
-                <Form.Label>Where Lost</Form.Label>
+              <Form.Group className="mb-3" controlId="placeLost">
+                <Form.Label>Where Lost (optional, {MAX_PLACE_LOST} characters max)</Form.Label>
                 <div className="d-flex align-items-center">
                   <div className="flex-grow-1">
                     <Form.Control
-                      required
+                  
                       type="text"
-                      name="whereLost"
+                      name="placeLost"
                       placeholder="Where was the item Lost"
-                      value={formData.whereLost}
+                      value={formData.placeLost}
                       onChange={handleChange}
                     />
                   </div>
@@ -163,43 +208,48 @@ const LostItemForm = () => {
                     Use Current Location
                   </Button>
                 </div>
+                {maxReached.placeLost && <small className="text-danger">Maximum {MAX_PLACE_LOST} characters reached</small>}
                 <Form.Control.Feedback type="invalid">
                   Please provide where you Lost it.
                 </Form.Control.Feedback>
               </Form.Group>
 
+
               <Form.Group className="mb-3" controlId="date">
-                <Form.Label>Date</Form.Label>
+                <Form.Label>Date (optional)</Form.Label>
                 <Form.Control
-                  required
+       
                   type="date"
                   name="date"
                   placeholder="The date the item was Lost"
                   value={formData.date}
                   onChange={handleChange}
                 />
+               {maxReached.date && <small className="text-danger">Maximum {MAX_DATE} characters reached</small>}
                 <Form.Control.Feedback type="invalid">
                   Please provide a valid date.
                 </Form.Control.Feedback>
               </Form.Group>
               <Form.Group className="mb-3" controlId="email">
-                <Form.Label>Email</Form.Label>
+                <Form.Label>Email (required, {MAX_EMAIL} characters max)</Form.Label>
                 <Form.Control
+                  required
                   type="email"
                   name="email"
                   placeholder="Contact Email (Optional)"
                   value={formData.email}
                   onChange={handleChange}
                 />
+                {maxReached.email && <small className="text-danger">Maximum {MAX_EMAIL} characters reached</small>}
                 <Form.Control.Feedback type="invalid">
                   Please provide a valid email.
                 </Form.Control.Feedback>
               </Form.Group>
               <Form.Group className="mb-3" controlId="description">
-                <Form.Label>Description</Form.Label>
-
+                <Form.Label>Description (required, {MAX_DESCRIPTION} characters max)</Form.Label>
                 <Form.Control
                   as="textarea"
+                  required
                   rows={6}
                   name="description"
                   placeholder="Detailed Item Description"
@@ -207,6 +257,8 @@ const LostItemForm = () => {
                   onChange={handleChange}
                   style={{ resize: 'vertical' }}
                 />
+           
+           {maxReached.description && <small className="text-danger">Maximum {MAX_DESCRIPTION} characters reached</small>}
                 <Form.Control.Feedback type="invalid">
                   Please provide a description.
                 </Form.Control.Feedback>

@@ -32,10 +32,10 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/found-item" element={<FoundItemForm />} />
-        <Route path="/lost-item" element={<LostItemForm />} />
-        <Route path="/found-items" element={<FoundItemsList items={foundItems} />} />
+        <Route path="/" element={<HomePage/>} />
+        <Route path="/add-found-item" element={<FoundItemForm />} />
+        <Route path="/add-lost-item" element={<LostItemForm />} />
+        <Route path="/get-found-items" element={<FoundItemsList items={foundItems} />} />
         <Route path="/redirected-page" element={<MatchesPage />} />
         {/* Add additional routes here */}
       </Routes>
