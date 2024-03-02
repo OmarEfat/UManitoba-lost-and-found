@@ -32,7 +32,7 @@ ma =Marshmallow(app)
 
 class LostItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(500))
+    title = db.Column(db.String(100))
     place_lost = db.Column(db.Text(), default="")
     date_lost = db.Column(db.DateTime, default=date.today())
     email_lost = db.Column(db.String(100))
@@ -73,7 +73,7 @@ found_items_schema=FoundItemSchema(many=True)
 class FoundItem(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(500))
+    title = db.Column(db.String(100))
 
     place_found = db.Column(db.Text(),default="")
     place_handed = db.Column(db.Text())
