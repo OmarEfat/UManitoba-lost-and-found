@@ -39,7 +39,8 @@ const LostItemForm = () => {
     if (!form.checkValidity()) {
       event.stopPropagation();
     } else {
-
+      window.location.href = '/redirected-page';
+      postData();
     }
     setValidated(true);
   };
