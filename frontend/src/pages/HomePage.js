@@ -80,7 +80,7 @@ const HomePage = () => {
               variant="contained"
               color="primary"
               component={Link}
-              to="/lost-item"
+              to="/add-lost-item"
               sx={{
                 backgroundColor: "#D8824A",
                 margin: "8px",
@@ -98,7 +98,7 @@ const HomePage = () => {
               variant="contained"
               color="primary"
               component={Link}
-              to="/found-item"
+              to="/add-found-item"
               sx={{
                 backgroundColor: "#D8824A",
                 margin: "8px",
@@ -116,7 +116,7 @@ const HomePage = () => {
               variant="contained"
               color="primary"
               component={Link}
-              to="/found-items" // Adjust this route as needed
+              to="/get-found-items" // Adjust this route as needed
               sx={{
                 backgroundColor: "#D8824A",
                 margin: "8px",

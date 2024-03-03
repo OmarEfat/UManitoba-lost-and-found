@@ -11,8 +11,8 @@ function NavBar() {
       <Link to="/" style={{ flexGrow: 1 }}>
           <img src={logo} alt="Logo" style={{ height: '70px' }} />
         </Link>
-        <Button color="inherit" component={Link} to="/lost-item">Lost Item</Button>
-        <Button color="inherit" component={Link} to="/found-item">Found Item</Button>
+        <Button color="inherit" component={Link} to="/add-lost-item">Lost Item</Button>
+        <Button color="inherit" component={Link} to="/add-found-item">Found Item</Button>
       </Toolbar>
     </AppBar>
   );

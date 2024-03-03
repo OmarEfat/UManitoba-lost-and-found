@@ -1,12 +1,21 @@
-import datetime, json
+import datetime,json
 import google.generativeai as genai
+import re
 
+from datetime import datetime, date
 
 from flask import Flask, jsonify, request 
 from flask_cors import CORS
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+
+
+MAX_TITLE=100
+MAX_DESCRIPTION=1000
+MAX_EMAIL=100
+MIN_YEAR=1900
+MAX_YEAR=2100
 
 
 GOOGLE_API_KEY='AIzaSyAlCfjFEtoWVZ6ITvU0EtgW26twPI-596c'
@@ -23,19 +32,23 @@ ma =Marshmallow(app)
 
 class LostItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200))
-    place_lost = db.Column(db.String(200))
-    date_lost = db.Column(db.DateTime, default=datetime.datetime.now)
+    title = db.Column(db.String(100))
+    place_lost = db.Column(db.Text(), default="")
+    date_lost = db.Column(db.DateTime, default=date.today())
     email_lost = db.Column(db.String(100))
     description = db.Column(db.Text())
     
     
     def __init__(self, title, place_lost, email, date, desc):
         self.title=title
-        self.place_lost=place_lost
-        self.date_lost=date
         self.email_lost=email
         self.description=desc
+        
+        if place_lost is not None:
+            self.place_lost=place_lost
+        if date is not None:
+            self.date_lost=date
+
 
 
 
@@ -60,21 +73,31 @@ found_items_schema=FoundItemSchema(many=True)
 class FoundItem(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200))
+    title = db.Column(db.String(100))
 
-    place_found = db.Column(db.String(200))
-    place_handed = db.Column(db.String(200))
-    date_found = db.Column(db.DateTime, default=datetime.datetime.now)
-    email_found = db.Column(db.String(100))
+    place_found = db.Column(db.Text(),default="")
+    place_handed = db.Column(db.Text())
+    date_found = db.Column(db.DateTime, default=date.today())
+    email_found = db.Column(db.String(100), default="")
     description = db.Column(db.Text())
     
     def __init__(self, title, place_found, email, handed, date,desc ):
+
+    
         self.title=title
-        self.place_found=place_found
+
         self.place_handed=handed
-        self.date_found=date
-        self.email_found=email
         self.description=desc
+        
+        if place_found is not None:
+             self.place_found=place_found
+        
+        if date is not None:
+            self.date_found=date
+        
+        if email is not None:
+            self.email_found=email
+   
         
         
 class User(db.Model):
@@ -98,51 +121,107 @@ def get_lost_item_draft():
 @app.route("/add_lost_item", methods=['POST'])
 def add_lost_item():
     try:
-        title = request.json['title']
-        description = request.json['itemDescription']
-        email_lost = request.json['contactEmail']
-        place_lost = request.json['placeLost']
-        date_lost = request.json['dateLost']
+        required_fields=["title", "itemDescription", "contactEmail"]
+        if all(field in request.json for field in required_fields):
+            if (len(request.json["title"])<=MAX_TITLE 
+                and len(request.json["itemDescription"])<=MAX_DESCRIPTION
+                and  len(request.json["contactEmail"])<=MAX_EMAIL):
+                
+                    title = request.json['title']
+                    description = request.json['itemDescription']
+                    if is_valid_email(request.json['contactEmail']):
+                         email_lost = request.json['contactEmail']
+                    else:
+                        return jsonify({"error": "Invalid email address"}), 400
+                    
+                    lost_item =""
+                    place_lost=None
+                    date_lost=None
+                    
+                    if "placeLost" in request.json:
+                        place_lost = request.json['placeLost']
+                    if "dateLost" in request.json:
+                        if is_valid_date(request.json["dateLost"],MIN_YEAR, MAX_YEAR ):
+                            date_lost = request.json['dateLost']
+                        else:
+                            return jsonify({"error": "Date is not valid."}), 400
 
-        lost_item = LostItem(title, place_lost, email_lost, date_lost, description)
-        db.session.add(lost_item)
-        db.session.commit()
+                    lost_item = LostItem(title, place_lost, email_lost, date_lost, description)
+                    
+                    db.session.add(lost_item)
+                    db.session.commit()
 
-        # Call process_json_objects() with title and description arguments
-        matching_found_items = process_json_objects(title, description)
-        print("Matching ", matching_found_items)
+                    # Call process_json_objects() with title and description arguments
+                    matching_found_items = process_json_objects(title, description)
+                    print("Matching ", matching_found_items)
+                    
+                    return lost_item_schema.jsonify(lost_item)
+            else:
+                return jsonify({"error": "One or more fields exceed the maximum length."}), 400
+                         
+        else:
+            return jsonify({"error": "One or more required fields do not exist."}), 400
         
-        return lost_item_schema.jsonify(lost_item)
     except Exception as e:
         print(e)
         print("Something is wrong when adding a lost item.")
         return jsonify({"error": "An error occurred while adding a lost item."}), 500
+    finally:
+        print("Add a lost item terminated gracefully.")
 
 
 
 @app.route("/add_found_item", methods=['POST'])
 def add_found_item():
     try:
-        title=request.json['title']
-        description=request.json['itemDescription']
-        email_found=request.json['contactEmail']
-        place_found=request.json['placeFound']
-        place_handed=request.json['placeHanded']
-        date_found=request.json['dateFound']
-        
-        found_item=FoundItem(title, place_found, email_found, place_handed, date_found, description)
+        required_fields=["title", "itemDescription", "placeHanded"]
+        if all(field in request.json.keys() for field in required_fields):
+            if (len(request.json["title"])<=MAX_TITLE 
+                and len(request.json["itemDescription"])<=MAX_DESCRIPTION
+            ):
+                
+                title = request.json['title']
+                description = request.json['itemDescription']
+                place_handed = request.json['placeHanded']
+       
+                email_found=None
+                place_found=None
+                date_found=None
+                
+                if "contactEmail" in request.json.keys():
+      
+                    if len(request.json["contactEmail"])<=MAX_EMAIL and is_valid_email(request.json['contactEmail']):
+                         email_found = request.json['contactEmail']
+                    else:
+                        return jsonify({"error": "Invalid email address."}), 400
+                if "placeFound" in request.json.keys():
+                     place_found = request.json['placeFound']
+                if "dateFound" in request.json.keys():
+                        if is_valid_date(request.json["dateFound"],MIN_YEAR, MAX_YEAR ):
+                            date_found = request.json['dateFound']
+                        else:
+                            return jsonify({"error": "Date is not valid."}), 400
 
-        db.session.add(found_item)
-        
-        db.session.commit()
+                found_item = FoundItem(
+                    title, place_found, email_found, place_handed, date_found, description)
 
+                db.session.add(found_item)
+                db.session.commit()
 
+                return found_item_schema.jsonify(found_item)
+            else:
+                return jsonify({"error": "One or more fields exceed the maximum length."}), 400
+                                 
+        else:
+            return jsonify({"error": "One or more required fields do not exist."}), 400
         
-        return  found_item_schema.jsonify(found_item)
     except Exception as e:
         print(e)
         print("Something is worng when adding found item.")
-        return None
+        return jsonify({"error": "An error occurred while processing the request."}), 500
+    
+    finally:
+        print("Add a found item terminated gracefully.")
 
 
 
@@ -334,9 +413,18 @@ def process_json_objects(title, description):
 
 
 
+def is_valid_email(email):
+    # Regular expression for basic email validation
+    email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+    return re.match(email_regex, email) is not None
 
-
-
+def is_valid_date(date_str, min_year, max_year, date_format='%Y-%m-%d'):
+    try:
+        date = datetime.strptime(date_str, date_format).date()
+        today = date.today()
+        return min_year <= date.year <= max_year and date <= today
+    except ValueError:
+        return False
 
 
 
