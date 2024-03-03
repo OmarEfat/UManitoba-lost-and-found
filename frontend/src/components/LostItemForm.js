@@ -76,6 +76,24 @@ const LostItemForm = () => {
     }
   };
 
+
+  const getCurrentDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    let month = today.getMonth() + 1;
+    let day = today.getDate();
+  
+    // Append leading zero if month or day is single digit
+    if (month < 10) {
+      month = '0' + month;
+    }
+    if (day < 10) {
+      day = '0' + day;
+    }
+  
+    return `${year}-${month}-${day}`;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -224,6 +242,7 @@ const LostItemForm = () => {
                   placeholder="The date the item was Lost"
                   value={formData.date}
                   onChange={handleChange}
+                  max={getCurrentDate()}
                 />
                {maxReached.date && <small className="text-danger">Maximum {MAX_DATE} characters reached</small>}
                 <Form.Control.Feedback type="invalid">
@@ -236,7 +255,7 @@ const LostItemForm = () => {
                   required
                   type="email"
                   name="email"
-                  placeholder="Contact Email (Optional)"
+                  placeholder="Contact Email"
                   value={formData.email}
                   onChange={handleChange}
                 />
