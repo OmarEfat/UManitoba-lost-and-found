@@ -6,13 +6,13 @@ import foundImage from '../images/found.JPG';
 import ReCAPTCHA from "react-google-recaptcha";
 
 
-const MAX_EMAIL=100;
-const MAX_TITLE=100;
-const MAX_DESCRIPTION=1000;
-const MAX_PLACE_FOUND =1000;
-const MAX_PLACE_HANDED =1000;
+const MAX_EMAIL = 100;
+const MAX_TITLE = 100;
+const MAX_DESCRIPTION = 1000;
+const MAX_PLACE_FOUND = 1000;
+const MAX_PLACE_HANDED = 1000;
 
-const MAX_DATE=12;
+const MAX_DATE = 12;
 
 
 const FoundItemForm = () => {
@@ -26,6 +26,8 @@ const FoundItemForm = () => {
   });
 
   const [validated, setValidated] = useState(false);
+  const [isEmailDomainValid, setIsEmailDomainValid] = useState(true);
+
   const [recaptchaVerified, setRecaptchaVerified] = useState(false);
   const [maxReached, setMaxReached] = useState({
     title: false,
@@ -34,7 +36,7 @@ const FoundItemForm = () => {
     date: false,
     email: false,
     description: false
-});
+  });
 
 
 
@@ -46,53 +48,63 @@ const FoundItemForm = () => {
 
     // Define maximum lengths for each field
     const maxLengths = {
-        title: MAX_TITLE,
-        placeFound: MAX_PLACE_FOUND,
-        placeHanded: MAX_PLACE_HANDED,
-        date: MAX_DATE,
-        email: MAX_EMAIL, // Adjust as needed
-        description: MAX_DESCRIPTION // Adjust as needed
+      title: MAX_TITLE,
+      placeFound: MAX_PLACE_FOUND,
+      placeHanded: MAX_PLACE_HANDED,
+      date: MAX_DATE,
+      email: MAX_EMAIL, // Adjust as needed
+      description: MAX_DESCRIPTION // Adjust as needed
     };
 
-   e.target.maxLength = maxLengths[name];
+    e.target.maxLength = maxLengths[name];
 
 
     // Update the form data with the truncated value
     setFormData({
-        ...formData,
-        [name]: value//truncatedValue
+      ...formData,
+      [name]: value//truncatedValue
     });
+
+    if (name === "email") {
+      if (value === "") {
+        setIsEmailDomainValid(true);
+      } else {
+        const validDomain = value.endsWith("@myumanitoba.ca") || value.endsWith("@umanitoba.ca");
+        setIsEmailDomainValid(validDomain);
+      }
+    }
+
 
     if (value.length >= maxLengths[name]) {
       setMaxReached({
-          ...maxReached,
-          [name]: true
+        ...maxReached,
+        [name]: true
       });
-  } else {
+    } else {
       setMaxReached({
-          ...maxReached,
-          [name]: false
+        ...maxReached,
+        [name]: false
       });
-  }
-};
+    }
+  };
 
 
-const getCurrentDate = () => {
-  const today = new Date();
-  const year = today.getFullYear();
-  let month = today.getMonth() + 1;
-  let day = today.getDate();
+  const getCurrentDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    let month = today.getMonth() + 1;
+    let day = today.getDate();
 
-  // Append leading zero if month or day is single digit
-  if (month < 10) {
-    month = '0' + month;
-  }
-  if (day < 10) {
-    day = '0' + day;
-  }
+    // Append leading zero if month or day is single digit
+    if (month < 10) {
+      month = '0' + month;
+    }
+    if (day < 10) {
+      day = '0' + day;
+    }
 
-  return `${year}-${month}-${day}`;
-};
+    return `${year}-${month}-${day}`;
+  };
 
 
 
@@ -100,6 +112,11 @@ const getCurrentDate = () => {
     console.log('start')
     event.preventDefault();
     const form = event.currentTarget;
+
+    if (!isEmailDomainValid) {
+      alert("Please use a valid @myumanitoba.ca or @umanitoba.ca email address.");
+      return;
+    }
 
     if (form.checkValidity() === false) {
       event.stopPropagation();
@@ -200,7 +217,7 @@ const getCurrentDate = () => {
                   value={formData.title}
                   onChange={handleChange}
                 />
-                  {maxReached.title && <small className="text-danger">Maximum {MAX_TITLE} characters reached</small>}
+                {maxReached.title && <small className="text-danger">Maximum {MAX_TITLE} characters reached</small>}
                 <Form.Control.Feedback type="invalid">
                   Please provide a title.
                 </Form.Control.Feedback>
@@ -211,7 +228,7 @@ const getCurrentDate = () => {
                 <div className="d-flex align-items-center">
                   <div className="flex-grow-1">
                     <Form.Control
-                   
+
                       type="text"
                       name="placeFound"
                       placeholder="Where was the item found"
@@ -228,7 +245,7 @@ const getCurrentDate = () => {
                   </Button>
                 </div>
                 {maxReached.placeFound && <small className="text-danger">Maximum {MAX_PLACE_FOUND} characters reached</small>}
-                
+
                 <Form.Control.Feedback type="invalid">
                   Please provide where you found it.
                 </Form.Control.Feedback>
@@ -264,7 +281,7 @@ const getCurrentDate = () => {
               {<Form.Group className="mb-3" controlId="date">
                 <Form.Label>Date (optional)</Form.Label>
                 <Form.Control
-                
+
                   type="date"
                   name="date"
                   placeholder="The date the item was found"
@@ -280,7 +297,7 @@ const getCurrentDate = () => {
               <Form.Group className="mb-3" controlId="email">
                 <Form.Label>Email (optional, {MAX_EMAIL} characters max))</Form.Label>
                 <Form.Control
-         
+
                   type="email"
                   name="email"
                   placeholder="Contact Email (Optional)"
@@ -288,6 +305,8 @@ const getCurrentDate = () => {
                   onChange={handleChange}
                 />
                 {maxReached.email && <small className="text-danger">Maximum {MAX_EMAIL} characters reached</small>}
+                {!isEmailDomainValid && <small className="text-danger">Email must be from a @myumanitoba.ca or @umanitoba.ca domain</small>}
+
                 <Form.Control.Feedback type="invalid">
                   Please provide a valid email.
                 </Form.Control.Feedback>
@@ -305,8 +324,8 @@ const getCurrentDate = () => {
                   onChange={handleChange}
                   style={{ resize: 'vertical' }}
                 />
-                      {maxReached.description && <small className="text-danger">Maximum {MAX_DESCRIPTION} characters reached</small>}
-                
+                {maxReached.description && <small className="text-danger">Maximum {MAX_DESCRIPTION} characters reached</small>}
+
                 <Form.Control.Feedback type="invalid">
                   Please provide a description.
                 </Form.Control.Feedback>

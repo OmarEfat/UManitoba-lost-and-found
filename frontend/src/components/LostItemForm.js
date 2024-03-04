@@ -6,11 +6,11 @@ import lostImage from '../images/confused.jpg';
 import ReCAPTCHA from "react-google-recaptcha";
 
 
-const MAX_EMAIL=100;
-const MAX_TITLE=100;
-const MAX_DESCRIPTION=1000;
-const MAX_PLACE_LOST =1000;
-const MAX_DATE=12;
+const MAX_EMAIL = 100;
+const MAX_TITLE = 100;
+const MAX_DESCRIPTION = 1000;
+const MAX_PLACE_LOST = 1000;
+const MAX_DATE = 12;
 
 
 const LostItemForm = () => {
@@ -27,6 +27,7 @@ const LostItemForm = () => {
 
   const [validated, setValidated] = useState(false);
   const [recaptchaVerified, setRecaptchaVerified] = useState(false);
+  const [isEmailDomainValid, setIsEmailDomainValid] = useState(true);
   const [maxReached, setMaxReached] = useState({
     title: false,
     placeLost: false,
@@ -43,6 +44,11 @@ const LostItemForm = () => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+
+
+    if (name === "email") {
+      setIsEmailDomainValid(value.endsWith("@myumanitoba.ca") || value.endsWith("@umanitoba.ca"));
+    }
 
 
     // Define maximum lengths for each field
@@ -82,7 +88,7 @@ const LostItemForm = () => {
     const year = today.getFullYear();
     let month = today.getMonth() + 1;
     let day = today.getDate();
-  
+
     // Append leading zero if month or day is single digit
     if (month < 10) {
       month = '0' + month;
@@ -90,13 +96,18 @@ const LostItemForm = () => {
     if (day < 10) {
       day = '0' + day;
     }
-  
+
     return `${year}-${month}-${day}`;
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
+
+    if (!isEmailDomainValid) {
+      alert("Please use a valid @myumanitoba.ca or @umanitoba.ca email address.");
+      return;
+    }
 
     if (!form.checkValidity()) {
       event.stopPropagation();
@@ -210,7 +221,7 @@ const LostItemForm = () => {
                 <div className="d-flex align-items-center">
                   <div className="flex-grow-1">
                     <Form.Control
-                  
+
                       type="text"
                       name="placeLost"
                       placeholder="Where was the item Lost"
@@ -236,7 +247,7 @@ const LostItemForm = () => {
               <Form.Group className="mb-3" controlId="date">
                 <Form.Label>Date (optional)</Form.Label>
                 <Form.Control
-       
+
                   type="date"
                   name="date"
                   placeholder="The date the item was Lost"
@@ -244,7 +255,7 @@ const LostItemForm = () => {
                   onChange={handleChange}
                   max={getCurrentDate()}
                 />
-               {maxReached.date && <small className="text-danger">Maximum {MAX_DATE} characters reached</small>}
+                {maxReached.date && <small className="text-danger">Maximum {MAX_DATE} characters reached</small>}
                 <Form.Control.Feedback type="invalid">
                   Please provide a valid date.
                 </Form.Control.Feedback>
@@ -259,6 +270,8 @@ const LostItemForm = () => {
                   value={formData.email}
                   onChange={handleChange}
                 />
+                {!isEmailDomainValid && <small className="text-danger">Email must be from a @myumanitoba.ca or @umanitoba.ca domain</small>}
+
                 {maxReached.email && <small className="text-danger">Maximum {MAX_EMAIL} characters reached</small>}
                 <Form.Control.Feedback type="invalid">
                   Please provide a valid email.
@@ -276,8 +289,8 @@ const LostItemForm = () => {
                   onChange={handleChange}
                   style={{ resize: 'vertical' }}
                 />
-           
-           {maxReached.description && <small className="text-danger">Maximum {MAX_DESCRIPTION} characters reached</small>}
+
+                {maxReached.description && <small className="text-danger">Maximum {MAX_DESCRIPTION} characters reached</small>}
                 <Form.Control.Feedback type="invalid">
                   Please provide a description.
                 </Form.Control.Feedback>
