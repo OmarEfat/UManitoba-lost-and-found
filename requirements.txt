@@ -1,8 +1,9 @@
 Flask
---upgrade pip
-npm install axios
 
-Flask-SQLAlchemy
-myslqclient (might need to insatll this before: brew install mysql-client ) 
+
+Flask-SQLAlchemy 
+mysqlclient 
 flask-marshmallow
 marshmallow-sqlalchemy
+flask-cors
+cors
