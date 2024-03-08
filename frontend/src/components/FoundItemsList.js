@@ -32,6 +32,7 @@ const FoundItemsList = ({ items }) => {
                     </tbody>
                 </Table>
             </Container>
+            
         </div>
     );
 };

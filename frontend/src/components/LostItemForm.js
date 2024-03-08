@@ -228,7 +228,13 @@ const LostItemForm = () => {
             <img src={lostImage} alt="Your Image" style={{ maxWidth: '100%', maxHeight: '400px' }} />
           </Col>
         </Row>
+        
       </Container>
+      <footer style={{ marginTop:'50px',backgroundColor: "#000000", padding: "10px", textAlign: "center" }}>
+        <p style={{ margin: "0" }}>
+          &copy; 2024 UofM. All rights reserved.
+        </p>
+      </footer>
     </div>
   );
 };

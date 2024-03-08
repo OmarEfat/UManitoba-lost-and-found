@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import myImage from "../images/helping.png";
 import secondImage from "../images/carousel1.png";
 import thirdImage from "../images/business09.png";
-import fourthImage from "../images/cardpic.png";
+
 
 //MUI
 import { Grid, Typography, Button } from "@mui/material";
@@ -82,7 +82,7 @@ const HomePage = () => {
               component={Link}
               to="/lost-item"
               sx={{
-                backgroundColor: "#D8824A",
+                backgroundColor: "#0096FF",
                 margin: "8px",
                 padding: "10px 20px",
                 fontSize: '1rem',
@@ -100,7 +100,7 @@ const HomePage = () => {
               component={Link}
               to="/found-item"
               sx={{
-                backgroundColor: "#D8824A",
+                backgroundColor: "#0096FF",
                 margin: "8px",
                 padding: "10px 20px",
                 fontSize: '1rem',
@@ -118,7 +118,7 @@ const HomePage = () => {
               component={Link}
               to="/found-items" // Adjust this route as needed
               sx={{
-                backgroundColor: "#D8824A",
+                backgroundColor: "#0096FF",
                 margin: "8px",
                 padding: "10px 20px",
                 fontSize: '1rem',
@@ -136,11 +136,11 @@ const HomePage = () => {
           <img
             src={myImage}
             alt="lost and found picture"
-            style={{ width: "50%", height: "auto" }}
+            style={{ marginBottom:'50px',width: "50%", height: "auto" }}
           />
         </Grid>
       </Grid>
-      <footer style={{ backgroundColor: "#D8824A", padding: "10px", textAlign: "center" }}>
+      <footer style={{ backgroundColor: "#000000", padding: "10px", textAlign: "center" }}>
         <p style={{ margin: "0" }}>
           &copy; 2024 UofM. All rights reserved.
         </p>
