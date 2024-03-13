@@ -2,8 +2,18 @@ Flask
 
 
 Flask-SQLAlchemy 
-mysqlclient 
+
 flask-marshmallow
 marshmallow-sqlalchemy
 flask-cors
 cors
+
+google-generativeai
+click==8.1.1
+
+itsdangerous==2.1.2
+Jinja2==3.1.1
+MarkupSafe==2.1.1
+Werkzeug==2.1.0
+
+mysqlclient 
