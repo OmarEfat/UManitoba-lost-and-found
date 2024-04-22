@@ -24,7 +24,7 @@ app = Flask(__name__)
 CORS(app) 
 app.app_context().push()
 
-app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql://root:''@127.0.0.1/lost_and_found_db'
+app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql://admin:umanitobalostandfound@lost-and-found-db-identifier.cjoie42iocs6.ca-central-1.rds.amazonaws.com:3306/lost_and_found_db'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -334,13 +334,13 @@ def evaluate_item_match(lost, found):
 
 
 
-test_cases = [
+# test_cases = [
 
-   ("black phone ", " i found a phone while walking down the street across from engineering building, i think it was some type of bright color"),
-   ("smart watch ", "smart phone"),
-   ("android phone ", "ios phone "),
-   ("balck hoodi", "black shirt"),
-]
+#    ("black phone ", " i found a phone while walking down the street across from engineering building, i think it was some type of bright color"),
+#    ("smart watch ", "smart phone"),
+#    ("android phone ", "ios phone "),
+#    ("balck hoodi", "black shirt"),
+# ]
 
 
 # for lost, found in test_cases:
