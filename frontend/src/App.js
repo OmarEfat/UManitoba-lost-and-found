@@ -1,11 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HomePage from './pages/HomePage';
+import "bootstrap/dist/css/bootstrap.css";
+import React, { useEffect, useState } from 'react';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import FoundItemForm from './components/FoundItemForm';
-import LostItemForm from './components/LostItemForm';
-import "bootstrap/dist/css/bootstrap.css"
 import FoundItemsList from './components/FoundItemsList';
+import LostItemForm from './components/LostItemForm';
 import MatchesPage from './components/redirectedPage.js';
+import HomePage from './pages/HomePage';
 
 const App = () => {
 
@@ -36,7 +36,7 @@ const App = () => {
         <Route path="/add-found-item" element={<FoundItemForm />} />
         <Route path="/add-lost-item" element={<LostItemForm />} />
         <Route path="/get-found-items" element={<FoundItemsList items={foundItems} />} />
-        <Route path="/redirected-page" element={<MatchesPage />} />
+        <Route path="/redirected-page/:ID" element={<MatchesPage />} />
         {/* Add additional routes here */}
       </Routes>
     </Router>

@@ -1,10 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import NavBar from '../components/NavBar';
-
 // Import fs module to read the JSON file
 
 
-const MatchesPage = ({ matches }) => {
+const MatchesPage = ( ) => {
+  const { ID } = useParams();
+
+  const [matches, setMatches] = useState([]);
+
+  useEffect(() => {
+    const preLoad = async () => {
+      try {
+        const responseMatches = await fetch(`http://127.0.0.1:5000/match/${ID}`, {
+          method: 'GET',
+        });
+
+        if (!responseMatches.ok) {
+          throw new Error(`HTTP error! status: ${responseMatches.status}`);
+        }
+
+        const data = await responseMatches.json();
+  
+        setMatches(data);
+        console.log('get matches success:', data);
+      } catch (error) {
+        console.error('Find matches: There was an error with the find matches:', error);
+      }
+    };
+
+    preLoad();
+  }, []); // Empty dependency array ensures that this effect runs only once after the component mounts
+
   return (
     <div>
       <NavBar />
@@ -17,8 +44,8 @@ const MatchesPage = ({ matches }) => {
                 {/* Render individual match data */}
                 {/* Adjust this based on the structure of your matches data */}
                 <p>Title: {match.title}</p>
-                <p>Where Lost: {match.whereLost}</p>
-                <p>Date Lost: {match.dateLost}</p>
+                <p>Place Found: {match.place_found}</p>
+                <p>Date Found: {match.date_found}</p>
                 {/* Add more fields as needed */}
               </li>
             ))}

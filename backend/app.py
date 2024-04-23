@@ -11,6 +11,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
 
+
+
 MAX_TITLE=100
 MAX_DESCRIPTION=1000
 MAX_EMAIL=100
@@ -168,6 +170,23 @@ def add_lost_item():
         return jsonify({"error": "An error occurred while adding a lost item."}), 500
     finally:
         print("Add a lost item terminated gracefully.")
+
+
+
+@app.route("/match/<id>/", methods=['GET'])
+def find_matches(id):
+    try:
+        lost_item=LostItem.query.get(id)
+        matching_found_items = process_json_objects(lost_item.title, lost_item.description)
+        return matching_found_items
+
+    
+    except Exception as e:
+        print(e)
+        print("Something is wrong when finding matches for lost item.")
+        return jsonify({"error": "An error occurred while finding matches for a lost item."}), 500
+    finally:
+        print("Finding matches for a lost item terminated gracefully.")
 
 
 
@@ -367,8 +386,8 @@ def process_json_objects(title, description):
             if isMatch(combined_user_input, combined_main):
                 found_item["place_handed"] = found_item["place_handed"]
                 json_object_list.append(found_item)
-    with open('redirectedPage.js', 'w') as json_file:
-        json.dump(json_object_list, json_file)
+    # with open('redirectedPage.js', 'w') as json_file:
+    #     json.dump(json_object_list, json_file)
 
     return json_object_list
 

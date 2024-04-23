@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Container, Col, Row, Form } from 'react-bootstrap';
 import { Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import ReCAPTCHA from "react-google-recaptcha";
+import { useNavigate } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import lostImage from '../images/confused.jpg';
-import ReCAPTCHA from "react-google-recaptcha";
-
 
 const MAX_EMAIL = 100;
 const MAX_TITLE = 100;
@@ -21,6 +21,7 @@ const LostItemForm = () => {
     contactEmail: '',
     itemDescription: ''
   });
+  const navigate = useNavigate();
 
 
 
@@ -112,8 +113,10 @@ const LostItemForm = () => {
     if (!form.checkValidity()) {
       event.stopPropagation();
     } else {
-      window.location.href = '/redirected-page';
+
       postData();
+    // window.location.href = '/redirected-page';
+
     }
     setValidated(true);
   };
@@ -147,7 +150,13 @@ const LostItemForm = () => {
       const data = await response.json();
       console.log('Success:', data);
       alert("Item added, thanks");
+      const ID=data["id"];
+      console.log("the item id is ", ID);
+      navigate(`/redirected-page/${ID}`); 
       // Reset the form or navigate the user to a success page, etc.
+
+
+
     } catch (error) {
       console.error('There was an error with the form submission:', error);
     }
